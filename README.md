@@ -11,7 +11,7 @@
 Based on the amazing work from [Custom Brand Icons](https://github.com/elax46/custom-brand-icons) by @elax46 
 
 With this repository, you will be able to add custom icons from your own icon set into Home Assistant and use them on the Lovelace dashboard.
-![logo](https://res.cloudinary.com/dcongin7u/image/upload/v1707320837/cbi-logo.jpg)
+![Custom icons](https://raw.githubusercontent.com/mathoudebine/homeassistant-custom-icons/master/resources/custom-icons.png)
 
 ## Pre-requisites & limitations
 
@@ -42,6 +42,8 @@ If you don't want to share your icons publicly, download this repository instead
 ### 2. Add your SVG icons
 
 Add all your SVG icons to the `icon-svg` folder. The name of the file will be the icon name in Home Assistant.
+
+You can remove SVG files already present for demo purposes.
 
 ### 3. Generate icons .js file for Home Assistant
 
