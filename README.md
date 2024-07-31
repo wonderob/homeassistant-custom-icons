@@ -17,13 +17,14 @@ With this repository, you will be able to add custom icons from your own icon se
 
 Mandatory:
 * you must have Python 3 installed on your computer
-* your icons must be in SVG format only
-* the `svg` node must contain a `viewbox` property only. Any other property like `transform`, `translate`, or `scale` will be ignored
-* the `svg` must contain one or several of the following shapes: `path`, `circle`, `polygon` or `rect`
+* your icons must be in SVG format
+* the `svg` node must contain a `viewBox` property only. Any other property like `transform`, `translate`, or `scale` will be ignored
+* the `svg` must contain one or several of the following shapes: `path`, `circle`, `polygon`, `polyline` or `rect`
 * shapes can be inside a `g` node, but any properties from the `g` node are ignored
 
 Recommended:
-* your icons will look better if they are square: the viewbox property will be something like `viewBox="0 0 128 128"`
+* your icons will look better if they are square: the viewBox property will be something like `viewBox="0 0 128 128"`
+* your icons will look better if they are centered horizontally & vertically inside the viewBox
 
 Limitations:
 * `style` or `fill` properties are ignored: icons can be monochrome only. Home Assistant will manage icons color based on theme and entity state.

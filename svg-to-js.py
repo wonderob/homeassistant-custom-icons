@@ -21,6 +21,12 @@ def polygon_to_path(polygon):
     return f"M{points}z"
 
 
+def polyline_to_path(polygon):
+    # Convert polyline to path https://stackoverflow.com/questions/10717190/convert-svg-polygon-to-path
+    points = polygon.getAttribute('points').strip()
+    return f"M{points}"
+
+
 def rect_to_path(rect):
     # Convert rect to path https://github.com/elrumordelaluz/element-to-path/blob/master/src/index.js
     x = float(rect.getAttribute('x'))
@@ -53,15 +59,25 @@ for filename in sorted(os.listdir("icon-svg")):
             for g_node in xml.getElementsByTagName("svg")[0].getElementsByTagName("g"):
                 nodes += g_node.childNodes
             for node in nodes:
-                if node.nodeType == Node.ELEMENT_NODE and node.nodeName != "path" and node.nodeName != "g" and node.nodeName != "circle" and node.nodeName != "polygon" and node.nodeName != "rect":
+                if (node.nodeType == Node.ELEMENT_NODE
+                        and node.nodeName != "path"
+                        and node.nodeName != "g"
+                        and node.nodeName != "circle"
+                        and node.nodeName != "polygon"
+                        and node.nodeName != "polyline"
+                        and node.nodeName != "rect"):
                     print("Incompatible icon %s : contains \"%s\" element" % (icon, node.nodeName))
                     incompatible = True
             if incompatible:
                 continue
 
             viewbox = xml.getElementsByTagName("svg")[0].getAttribute('viewBox').replace(" ", ",")
-            if len(xml.getElementsByTagName("path")) >= 1 or len(xml.getElementsByTagName("circle")) >= 1 or len(
-                    xml.getElementsByTagName("polygon")) >= 1 or len(xml.getElementsByTagName("rect")) >= 1:
+            if (len(xml.getElementsByTagName("path")) >= 1
+                    or len(xml.getElementsByTagName("circle")) >= 1
+                    or len(xml.getElementsByTagName("polygon")) >= 1
+                    or len(xml.getElementsByTagName("polyline")) >= 1
+                    or len(xml.getElementsByTagName("rect")) >= 1
+            ):
                 data = ""
                 for path in xml.getElementsByTagName("path"):
                     data += path.getAttribute('d') + " "
@@ -69,6 +85,8 @@ for filename in sorted(os.listdir("icon-svg")):
                     data += circle_to_path(circle) + " "
                 for polygon in xml.getElementsByTagName("polygon"):
                     data += polygon_to_path(polygon) + " "
+                for polyline in xml.getElementsByTagName("polyline"):
+                    data += polyline_to_path(polyline) + " "
                 for rect in xml.getElementsByTagName("rect"):
                     data += rect_to_path(rect) + " "
                 js.write("  \"%s\":[%s,\"%s\"],\n" % (icon_name, viewbox, data))
