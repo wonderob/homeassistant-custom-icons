@@ -1,143 +1,106 @@
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/elax46/custom-brand-icons)](https://github.com/elax46/custom-brand-icons/releases/latest)
+[![hacs_badge](https://img.shields.io/badge/HACS-Integration-41BDF5.svg)](https://github.com/hacs/integration)
 [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
-![GitHub file size in bytes](https://img.shields.io/github/size/elax46/custom-brand-icons/dist/custom-brand-icons.js?label=plugin%20size)
-![GitHub last commit](https://img.shields.io/github/last-commit/elax46/custom-brand-icons)
 
 [cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
 [cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
 [cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
 
-# Custom brand icons
+# Add your custom icons to Home Assistant!
 
+Based on the amazing work from [Custom Brand Icons](https://github.com/elax46/custom-brand-icons) by @elax46 
+
+With this repository, you will be able to add custom icons from your own icon set into Home Assistant and use them on the Lovelace dashboard.
 ![logo](https://res.cloudinary.com/dcongin7u/image/upload/v1707320837/cbi-logo.jpg)
 
-#### Custom brand icons use the prefix `phu:`
-#### Append Name (of the icon) after `phu:`
-- Example: `phu:eggs` ![Preview](/icon-svg/eggs.svg)
-- Example: `phu:chicken` ![Preview](/icon-svg/chicken.svg)
+## Pre-requisites & limitations
 
-# Icon Requests
+Mandatory:
+* you must have Python 3 installed on your computer
+* your icons must be in SVG format only
+* the `svg` node must contain a `viewbox` property only. Any other property like `transform`, `translate`, or `scale` will be ignored
+* the `svg` must contain one or several of the following shapes: `path`, `circle`, `polygon` or `rect`
+* shapes can be inside a `g` node, but any properties from the `g` node are ignored
 
-Want an icon? Open a [custom icon request](https://github.com/elax46/custom-brand-icons/issues/new?assignees=elax46&labels=icon-request&template=insertion-of-new-icons.md&title=Custom+Icon+request) or [contribute to the project](#developer-workflow).
--  Provide a **svg file and jpg logo of your request (we also are not mind readers and dont know every icon globaly so if no name is present please add it** and a image along with your request.
--  links to SVG's or Images will be ignored you must upload the files into your request, ignoring this will result in request being ignored. (if you can not be bothered to spend a few minutes doing this, why should we spend time making it).
--  For those who [made their own icons](#developer-workflow), open pull requests on the **[dev branch](https://github.com/elax46/custom-brand-icons/pulls)**.
+Recommended:
+* your icons will look better if they are square: the viewbox property will be something like `viewBox="0 0 128 128"`
 
-### Make sure to [install](#installation-methods) `custom-brand-icons.js` into `configuration.yaml` or `ui-lovelace.yaml`
+Limitations:
+* `style` or `fill` properties are ignored: icons can be monochrome only. Home Assistant will manage icons color based on theme and entity state.
 
-![2FA](https://res.cloudinary.com/dcongin7u/image/upload/v1620853194/example_pwvozi.jpg)
+To make or edit an icon in svg format you can use different programs starting from illustrator, inkview, or [Inkscape](https://inkscape.org/).
 
-## Iconify
+## How to use
 
-All icons are available in the [framework Iconify](https://github.com/iconify). You can use icons using the prefix `cbi`. Anyone who uses this icon set via the framework is reminded to comply with the license. For commercial purposes you can contact us
+### 1. Download or fork this repository
 
-- For all information  visit the website https://iconify.design
-- For use visit https://iconify.design/docs/usage/
-- Browse Icons  https://icon-sets.iconify.design/cbi/
+If you fork this repository it will be public on Github and cannot be changed. 
+If you don't want to share your icons publicly, download this repository instead of forking.
 
+### 2. Add your SVG icons
 
-## Available Icons
+Add all your SVG icons to the `icon-svg` folder. The name of the file will be the icon name in Home Assistant.
 
-To view all the available icons you can go to the following address
- -  [Icon Finder](https://elax46.github.io/custom-brand-icons/)
+### 3. Generate icons .js file for Home Assistant
 
-# Installation Methods
+Use `python svg-to-js.py` to convert your SVG icons to Home Assistant format. This script will create a `custom-icons.js` file containing all your icons.
 
-#### HACS
+See script output if some icons have not been processed. Fix the SVG the relaunch the script.
 
+### 4. Add your icons to Home Assistant
+
+#### Using HACS
+
+This method is only available if you forked this repository, or if you copied its content to another Github **public** repository.
 We recommend installing Custom brand icons card via [Home Assistant Community Store](https://hacs.xyz)
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=elax46&repository=custom-brand-icons&category=frontend)
+
+1. Make sure HACS is installed.
+2. Go to HACS > Frontend > Three dots > Custom repositories.
+3. Add your Github repository URL as a custom repository (category: lovelace).
+4. Install "My Custom Icons" that appeared in your Interface tab. You can customize the name by editing `hacs.json`.
 
 After installing through HACS:
-1. Add the following lines to your `configuration.yaml`
+1. Add the following lines to your `configuration.yaml`:
 
     ```yaml
     frontend:
       extra_module_url:
-        - /local/community/custom-brand-icons/custom-brand-icons.js
+        - /local/community/homeassistant-custom-icons/custom-icons.js
     ```
+   (Replace `homeassistant-custom-icons` by your Github repository name if you changed it)
 
-2. (Optional) YAML mode users. Add the following to your lovelace configuration using the Raw Config editor under Configure UI or ui-lovelace.yaml.
+2. **Restart Home Assistant.**
 
-    ```yaml
-    resources:
-      - type: js
-        url: /local/community/custom-brand-icons/custom-brand-icons.js
-    ```
+3. Hard Reload the homepage from your browser by holding CTRL and pressing F5. For Mac, hold ⌘ CMD and ⇧ SHIFT, then press R.
 
 #### Manual Installation
 
-To add custom repositories please follow [this guide](https://hacs.xyz/docs/faq/custom_repositories/). Set URL to `` and category to `Lovelace`.
+1. Copy the generated `custom-icons.js` file into `<config>/www/` folder. `<config>` is the directory where your `configuration.yaml` resides.
 
-1. Download `custom-brand-icons.js` file from the [latest release](/releases/latest).
-2. Copy the `custom-brand-icons.js` file into `<config>/www/` the directory where your `configuration.yaml` resides.
-
-3. Add the following to the `frontend` section of your `configuration.yaml`
+2. Add the following lines to your `configuration.yaml`:
 
     ```yaml
     frontend:
       extra_module_url:
-        - /local/custom-brand-icons.js
+        - /local/custom-icons.js
     ```
 
-4. (Optional) YAML mode users. Add the following to your lovelace configuration using the Raw Config editor under Configure UI or ui-lovelace.yaml.
+3. (Optional) YAML mode users: Go to Home Assistant Settings > Dashboards > Three dots > Resources > Add Resource  
+   * URL: `/local/custom-icons.js`  
+   * Resource Type: JavaScript module  
 
-    ```yaml
-    resources:
-      - type: js
-        url: /local/custom-brand-icons.js
-    ```
+4. **Restart Home Assistant.**
 
-5. Restart Home Assistant.
+5. Hard Reload the homepage from your browser by holding CTRL and pressing F5. For Mac, hold ⌘ CMD and ⇧ SHIFT, then press R.
+
+### 5. Use your custom icons
+
+Custom icons are available in all Home Assistant under the prefix `custom:`, as opposed to Home Assistant icons that use the prefix `hass:` or `mdi:`
+- Example: `custom:my_icon1` for an icon that was named `my_icon1.svg`
 
 ---
 
-# User Manual
-
-#### Custom brand icons use the prefix `phu:`
-#### Append Name (of the icon) after `phu:`
-- Example: `phu:eggs` ![Preview](/icon-svg/eggs.svg)
-- Example: `phu:chicken` ![Preview](/icon-svg/chicken.svg)
-
-Example of custom brand icons a lovelace card:
-
-```yaml
-entities:
-  - entity: light.lampada_entrance
-    icon: 'phu:go'
-    name: Go
-  - entity: light.monitor_2_right
-    icon: 'phu:play'
-    name: play 1
-  - entity: light.monitor_2_left
-    icon: 'phu:play'
-    name: play 2
-show_header_toggle: false
-title: Custom brand icons
-type: entities
-```
-
----
-
-# Don't see the icon?
-
-### Cache issue HomeAssistant 2024.1.1
-
-Some addons (including official) have had some [cache issues since 2024.1.1]([https://](https://github.com/elax46/custom-brand-icons/issues/560)), here are a few work arounds to try
-
-1. first go to settings, dashboard and 3 dots click resorces, add resource
-
-    ```yaml
-    /hacsfiles/custom-brand-icons/custom-brand-icons.js?hacstag=366862031202420
-    ```
-
-2. Add this second resource too
-    ```yaml
-    /local/community/custom-brand-icons/custom-brand-icons.js
-    ```
-
+## Don't see your new icons?
 
 #### Hard Reload (browser cache issue)
 - Reload browser by holding CTRL and pressing F5.
@@ -147,8 +110,8 @@ Some addons (including official) have had some [cache issues since 2024.1.1]([ht
 1. From left sidebar, select on *HACS*.
 2. Select on *Integrations*.
 3. From the top header bar (Integrations, Frontend), select *Frontend*.
-4. Search *custom-brand-icons* on the search bar.
-5. Select *Custom brand icons*.
+4. Search *My Custom Icons* on the search bar.
+5. Select *My Custom Icons*.
 6. From the top right, select the 3 vertical dots which opens a dropdown menu.
 7. Select *Redownload*.
 8. **Hard reload** browser.
@@ -162,78 +125,3 @@ Some addons (including official) have had some [cache issues since 2024.1.1]([ht
 6. Find *Custom brand icons* and select it.
 7. On the bottom right, select the big blue *Download* icon.
 8. **Hard reload** browser.
-
-# Thanks for your support
-
-Thanks, as always, to the precious contribution to [@rchiileea](https://github.com/rchiileea) for the creation of the required icons!
-Do you like these icons? Support the project with a pizza 🍕🍕
-
-[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/elax46)
-
-## StarGazers
-[![Stargazers repo roster for @elax46/custom-brand-icons](https://reporoster.com/stars/elax46/custom-brand-icons)](/stargazers)
-
----
-
-# Developer Workflow
-
-### Make your own `svg` icon
-
-- To make an icon in svg format you can use different programs starting from illustrator, inkview, or [Inkscape](https://inkscape.org/).
-- Verify `svg` icons are set properly by using text editor of your choice ([Notepad++](https://notepad-plus-plus.org/), Notepad, or Visual Studio Code).
-- The size of the icons must be **24px by 24px**.
-- The `svg` code must contain **viewbox**. No transform, translate, or scale.
-- Make sure to add color: **#44739e**. Every custom brand icon uses this color.
-- Once done, add the svg file in the folder `icon-svg` found in the root of the repo.
-
-Example svg file below:
-
-```svg
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-<!-- path d="..." is unique for each icon -->
-
-<svg
-   width="24"
-   height="24"
-   viewBox="0 0 24 24"
-   version="1.1"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-   <path
-     style="fill:#44739e"
-     d="..."
-    \>
-  </svg>
-```
-
-
-### Modify `custom-brand-icons.js` file
-
-Add the following entry to the `var icons` variable (list) of the `custom-brand-icons.js` file
-
-Example entry:
-
-```js
-"Bollard": [0, 0, 24.0, 24.0, "string"]
-```
-
-- `Bollard` = svg icon name used for `phu:`
-- `0, 0, 24.0, 24.0` = this data can be recovered from the svg file `viewBox="0 0 24 24"`
-  -  ***If this data is not present, you can leave the one indicated by me.***
-- `string` = this data can be recovered from the svg file `<path d="M21,12.5 C21,13.33 18.76,...."` In particular you will have to enter only the part of the vector code `"M21,12.5 C21,13.33 18.76"`. 
-  - For an example, take a look at the [icons already inserted](dist/custom-brand-icons.js).
-
-(Optional) In case you want to create your own perfix you can edit the last line of the `custom-brand-icons.js`
-
-```js
-window.customIconsets["yourprefix"] = getIcon;
-```
-
-### Update `README.md`
-- Remember to also update the `README.md` file by inserting the icon's path and the name for `phu:`.
-
-
-### Contributions and Pull Requests
-After adding your svg icon in `icon-svg`, modifying `custom-brand-icons.js`, and updating `README.md.`
-Open pull requests on the **[dev branch](https://github.com/elax46/custom-brand-icons/pulls)**.
