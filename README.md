@@ -57,12 +57,12 @@ See script output if some icons have not been processed. Fix the SVG the relaunc
 #### Using HACS
 
 This method is only available if you forked this repository, or if you copied its content to another Github **public** repository.
-We recommend installing Custom brand icons card via [Home Assistant Community Store](https://hacs.xyz)
 
-1. Make sure HACS is installed.
-2. Go to HACS > Frontend > Three dots > Custom repositories.
-3. Add your Github repository URL as a custom repository (category: lovelace).
-4. Install "My Custom Icons" that appeared in your Interface tab. You can customize the name by editing `hacs.json`.
+1. Commit the generated `custom-icons.js` file to your repository main branch
+2. Make sure HACS is installed.
+3. Go to HACS > Frontend > Three dots > Custom repositories.
+4. Add your Github repository URL as a custom repository (category: lovelace).
+5. Install "My Custom Icons" that appeared in your Interface tab. You can customize the name by editing `hacs.json`.
 
 After installing through HACS:
 1. Add the following lines to your `configuration.yaml`:
