@@ -10,8 +10,9 @@
 
 Based on the amazing work from [Custom Brand Icons](https://github.com/elax46/custom-brand-icons) by @elax46 
 
-With this repository, you will be able to add custom icons from your own icon set into Home Assistant and use them on the Lovelace dashboard.
-![Custom icons](https://raw.githubusercontent.com/mathoudebine/homeassistant-custom-icons/master/resources/custom-icons.png)
+With this repository, you will be able to add custom icons from your own icon set into Home Assistant and use them on the Lovelace dashboard:
+
+![Custom icons](https://raw.githubusercontent.com/mathoudebine/homeassistant-custom-icons/main/custom-icons.png)
 
 ## Pre-requisites & limitations
 
