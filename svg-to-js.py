@@ -39,6 +39,15 @@ def rect_to_path(rect):
     return f"M{x + rx} {y} H{x + w - rx} V{y + h - ry} H{x + rx} V{y + ry}z"
 
 
+def ellipse_to_path(ellipse):
+    # Convert ellipse to path https://github.com/elrumordelaluz/element-to-path/blob/master/src/index.js
+    cx = float(ellipse.getAttribute('cx'))
+    cy = float(ellipse.getAttribute('cy'))
+    rx = float(ellipse.getAttribute('rx'))
+    ry = float(ellipse.getAttribute('ry'))
+    return f"M{cx + rx} {cy} A{rx} {ry} 0 0 1 {cx} {cy + ry} A{rx} {ry} 0 0 1 {cx - rx} {cy} A{rx} {ry} 0 0 1 {cx + rx} {cy} z"
+
+
 # Beginning of file
 js = open("custom-icons.js", 'w')
 js.write("""var icons = {
@@ -69,7 +78,9 @@ for filename in sorted(os.listdir("icon-svg")):
                         and node.nodeName != "circle"
                         and node.nodeName != "polygon"
                         and node.nodeName != "polyline"
-                        and node.nodeName != "rect"):
+                        and node.nodeName != "rect"
+                        and node.nodeName != "ellipse"
+                ):
                     print("Incompatible icon %s : contains \"%s\" element" % (icon, node.nodeName))
                     incompatible = True
             if incompatible:
@@ -85,6 +96,7 @@ for filename in sorted(os.listdir("icon-svg")):
                     or len(xml.getElementsByTagName("polygon")) >= 1
                     or len(xml.getElementsByTagName("polyline")) >= 1
                     or len(xml.getElementsByTagName("rect")) >= 1
+                    or len(xml.getElementsByTagName("ellipse")) >= 1
             ):
                 data = ""
                 for path in xml.getElementsByTagName("path"):
@@ -97,13 +109,15 @@ for filename in sorted(os.listdir("icon-svg")):
                     data += polyline_to_path(polyline) + " "
                 for rect in xml.getElementsByTagName("rect"):
                     data += rect_to_path(rect) + " "
+                for ellipse in xml.getElementsByTagName("ellipse"):
+                    data += ellipse_to_path(ellipse) + " "
 
                 # Write result to .js file
                 js.write("  \"%s\":[%s,\"%s\"],\n" % (icon_name, viewbox, data))
 
                 # For debug purposes, also generate an SVG with the converted content
-                svg_converted = open(os.path.join("icon-svg", "converted", filename), 'w').write(f"""
-<svg viewBox="{xml.getElementsByTagName("svg")[0].getAttribute('viewBox')}" xmlns="http://www.w3.org/2000/svg">
+                svg_converted = open(os.path.join("icon-svg", "converted", filename), 'w').write(
+                    f"""<svg viewBox="{xml.getElementsByTagName("svg")[0].getAttribute('viewBox')}" xmlns="http://www.w3.org/2000/svg">
   <path d="{data}" />
 </svg>""")
             else:

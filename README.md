@@ -19,7 +19,7 @@ Mandatory:
 * you must have Python 3 installed on your computer
 * your icons must be in SVG format
 * the `svg` node must contain a `viewBox` property only. Any other property like `transform`, `translate`, or `scale` will be ignored
-* the `svg` must contain one or several of the following element: `path`, `circle`, `polygon`, `polyline` or `rect`
+* the `svg` must contain one or several of the following elements: `path`, `circle`, `ellipse`, `polygon`, `polyline` or `rect`
 * shapes can be inside a `g` node, but any properties from the `g` node are ignored
 
 Recommended:
