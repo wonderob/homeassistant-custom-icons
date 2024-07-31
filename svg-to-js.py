@@ -7,6 +7,7 @@ from xml.dom.minidom import parseString
 # Icon prefix in Home Assistant
 ICONS_PREFIX = "custom"
 
+
 def circle_to_path(circle):
     # Convert circle to path https://www.smashingmagazine.com/2019/03/svg-circle-decomposition-paths/
     cx = float(circle.getAttribute('cx'))
@@ -43,17 +44,20 @@ js = open("custom-icons.js", 'w')
 js.write("""var icons = {
 """)
 
+# Browe all icons from icon-svg folder
 for filename in sorted(os.listdir("icon-svg")):
     icon = os.path.join("icon-svg", filename)
     # checking if it is a file
     if os.path.isfile(icon):
         svg = open(icon, 'r').read()
+
+        # Parse SVG as XML
         xml = parseString(svg)
 
         icon_name = Path(icon).stem
         try:
+            # Look into all direct child nodes (and nodes inside "g") to detect unsupported SVG content
             incompatible = False
-            # Look into all direct child nodes (and nodes inside "g")
             nodes = xml.getElementsByTagName("svg")[0].childNodes + xml.getElementsByTagName("svg")[
                 0].getElementsByTagName("g")
             for g_node in xml.getElementsByTagName("svg")[0].getElementsByTagName("g"):
@@ -69,9 +73,13 @@ for filename in sorted(os.listdir("icon-svg")):
                     print("Incompatible icon %s : contains \"%s\" element" % (icon, node.nodeName))
                     incompatible = True
             if incompatible:
+                # Do not process this icon if incompatible SVG content is found
                 continue
 
+            # Convert viewBox data
             viewbox = xml.getElementsByTagName("svg")[0].getAttribute('viewBox').replace(" ", ",")
+
+            # Convert supported SVG content, because HomeAssistant only supports data in the "path" format
             if (len(xml.getElementsByTagName("path")) >= 1
                     or len(xml.getElementsByTagName("circle")) >= 1
                     or len(xml.getElementsByTagName("polygon")) >= 1
@@ -89,13 +97,21 @@ for filename in sorted(os.listdir("icon-svg")):
                     data += polyline_to_path(polyline) + " "
                 for rect in xml.getElementsByTagName("rect"):
                     data += rect_to_path(rect) + " "
+
+                # Write result to .js file
                 js.write("  \"%s\":[%s,\"%s\"],\n" % (icon_name, viewbox, data))
+
+                # For debug purposes, also generate an SVG with the converted content
+                svg_converted = open(os.path.join("icon-svg", "converted", filename), 'w').write(f"""
+<svg viewBox="{xml.getElementsByTagName("svg")[0].getAttribute('viewBox')}" xmlns="http://www.w3.org/2000/svg">
+  <path d="{data}" />
+</svg>""")
             else:
                 print("Incompatible icon %s : %d paths" % (icon, len(xml.getElementsByTagName("path"))))
         except Exception as e:
             print("Incompatible icon %s : %s" % (icon, e))
 
-# End of file
+# End of .js file
 js.write("""  }
 
 async function getIcon(name) {

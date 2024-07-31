@@ -19,12 +19,13 @@ Mandatory:
 * you must have Python 3 installed on your computer
 * your icons must be in SVG format
 * the `svg` node must contain a `viewBox` property only. Any other property like `transform`, `translate`, or `scale` will be ignored
-* the `svg` must contain one or several of the following shapes: `path`, `circle`, `polygon`, `polyline` or `rect`
+* the `svg` must contain one or several of the following element: `path`, `circle`, `polygon`, `polyline` or `rect`
 * shapes can be inside a `g` node, but any properties from the `g` node are ignored
 
 Recommended:
-* your icons will look better if they are square: the viewBox property will be something like `viewBox="0 0 128 128"`
-* your icons will look better if they are centered horizontally & vertically inside the viewBox
+* your icons are square: the viewBox property will be something like `viewBox="0 0 128 128"`
+* your icons are centered horizontally & vertically inside the viewBox
+* your icons contain only one SVG element (ideally one `path`) OR only elements of the same type: you can use [this online converter to do this](https://thednp.github.io/svg-path-commander/convert.html)
 
 Limitations:
 * `style` or `fill` properties are ignored: icons can be monochrome only. Home Assistant will manage icons color based on theme and entity state.
@@ -100,8 +101,9 @@ Custom icons are available in all Home Assistant under the prefix `custom:`, as 
 - Example: `custom:my_icon1` for an icon that was named `my_icon1.svg`
 
 ---
+## Troubleshooting
 
-## Don't see your new icons?
+### I can't find my new icons in Home Assistant
 
 #### Hard Reload (browser cache issue)
 - Reload browser by holding CTRL and pressing F5.
@@ -126,3 +128,12 @@ Custom icons are available in all Home Assistant under the prefix `custom:`, as 
 6. Find *Custom brand icons* and select it.
 7. On the bottom right, select the big blue *Download* icon.
 8. **Hard reload** browser.
+
+### My custom icons don't look like the original SVG in Home Assistant
+
+Some icons may look different in Home Assistant. This is because the SVG content needs to be adapted to the Home Assistant format.  
+The Home Assistant format accept a unique `path` element, so every other SVG elements like `circle`, `rect` ... must be converted to the `path` format then concatenated. This may lead to some visual differences.  
+This can also be caused by an SVG with multiple content. The superposition might be different after elements are converted and concatenated to a unique `path`.
+
+Try to rework your SVG to use only `path` elements if possible.
+You can convert your SVG using tools like https://thednp.github.io/svg-path-commander/convert.html or https://github.com/elrumordelaluz/path-that-svg
